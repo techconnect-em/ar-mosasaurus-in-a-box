@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dinosaur AR Experience</title>
+    <!-- A-Frame 1.6.0 -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.loaders.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.3/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="example-container">
+      <a-scene
+        mindar-image="imageTargetSrc: ./assets/targets.mind;
+                filterMinCF: 0.0001;
+                filterBeta: 0.07;
+                missTolerance: 5;
+                warmupTolerance: 5;
+                matrixInterpolation: true"
+        embedded
+        color-space="sRGB"
+        cursor="rayOrigin: mouse"
+        raycaster="objects: .touch-plane"
+        renderer="colorManagement: true; physicallyCorrectLights: true;
+            toneMapping: ACESFilmic; exposure: 1.8;
+            preserveDrawingBuffer: true; antialias: true;"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+      >
+        <a-assets>
+          <a-asset-item
+            id="dinosaur-model"
+            src="./assets/mosasaurus.glb"
+          ></a-asset-item>
+        </a-assets>
+
+        <!-- 強化されたライティング設定 -->
+        <!-- 環境光 - 全体的な明るさ -->
+        <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+
+        <!-- メインの方向光 - 主要な影とハイライト -->
+        <a-light
+          type="directional"
+          color="#ffffff"
+          intensity="1.2"
+          position="2 4 -3"
+          target="#dinosaur"
+        >
+        </a-light>
+
+        <!-- 補助光 - 影の部分を明るく -->
+        <a-light type="point" color="#ffffff" intensity="0.5" position="-2 1 1">
+        </a-light>
+        <!-- 環境光2 - 下からの反射光 -->
+        <a-light
+          type="hemisphere"
+          color="#ffffff"
+          groundColor="#b4a87e"
+          intensity="0.5"
+        >
+        </a-light>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity mindar-image-target="targetIndex: 0" ar-controller>
+          <!-- ★ タップ判定用プレーンをアンカー内に移動 -->
+          <a-plane
+            class="touch-plane"
+            width="2"
+            height="2"
+            position="0 0 0"
+            rotation="-90 0 0"
+            material="transparent: true; opacity: 0"
+          ></a-plane>
+
+          <a-entity
+            id="dinosaur"
+            gltf-model="#dinosaur-model"
+            animation-mixer="clip: *; timeScale: 1.5; loop: repeat"
+            position="-0.2 -0.2 -2"
+            scale="0.005 0.005 0.005"
+            rotation="0 45 0"
+            material="shader: standard; 
+                 roughness: 0.7; 
+                 metalness: 0.1;
+                 normalScale: 1 1;
+                 envMapIntensity: 1;"
+            shadow="cast: true; receive: true"
+          >
+          </a-entity>
+        </a-entity>
+      </a-scene>
+    </div>
+
+    <div id="scanning-overlay">箱の中をスキャンしてください</div>
+
+    <div class="buttons">
+      <button class="button" id="release-button">外に出す</button>
+      <button class="button" id="capture">
+        <i class="fas fa-camera"></i>
+      </button>
+      <button class="button" id="website-button">
+        <i class="fas fa-globe"></i>
+      </button>
+    </div>
+    <script src="script.js"></script>
+    <script src="tap-move.js"></script>
+    <script>
+      document.querySelector("a-scene").setAttribute("tap-move", "");
+    </script>
+  </body>
+</html>
