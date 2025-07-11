@@ -28,11 +28,9 @@
                 matrixInterpolation: true"
         embedded
         color-space="sRGB"
-        cursor="rayOrigin: mouse"
-        raycaster="objects: .touch-plane"
-        renderer="colorManagement: true; physicallyCorrectLights: true;
-            toneMapping: ACESFilmic; exposure: 1.8;
-            preserveDrawingBuffer: true; antialias: true;"
+        renderer="colorManagement: true; physicallyCorrectLights: true; preserveDrawingBuffer: true; antialias: true;
+                  toneMapping: ACESFilmic; exposure: 1.6;"
+        cursor="rayOrigin: mouse; fuse: false;" raycaster="objects: #dinosaur;"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false"
       >
@@ -45,28 +43,27 @@
 
         <!-- 強化されたライティング設定 -->
         <!-- 環境光 - 全体的な明るさ -->
-        <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+        <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
 
         <!-- メインの方向光 - 主要な影とハイライト -->
-        <a-light
-          type="directional"
-          color="#ffffff"
-          intensity="1.2"
-          position="2 4 -3"
-          target="#dinosaur"
-        >
+        <a-light type="directional" 
+                color="#ffffff" 
+                intensity="1" 
+                position="2 4 -3" 
+                target="#dinosaur">
         </a-light>
 
         <!-- 補助光 - 影の部分を明るく -->
-        <a-light type="point" color="#ffffff" intensity="0.5" position="-2 1 1">
+        <a-light type="point" 
+                color="#ffffff" 
+                intensity="0.5" 
+                position="-2 1 1">
         </a-light>
         <!-- 環境光2 - 下からの反射光 -->
-        <a-light
-          type="hemisphere"
-          color="#ffffff"
-          groundColor="#b4a87e"
-          intensity="0.5"
-        >
+        <a-light type="hemisphere" 
+                color="#ffffff" 
+                groundColor="#b4a87e" 
+                intensity="0.5">
         </a-light>
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity mindar-image-target="targetIndex: 0" ar-controller>
@@ -83,7 +80,7 @@
           <a-entity
             id="dinosaur"
             gltf-model="#dinosaur-model"
-            animation-mixer="clip: *; timeScale: 1.5; loop: repeat"
+            animation-mixer="clip: *; loop: repeat"
             position="-0.2 -0.2 -2"
             scale="0.005 0.005 0.005"
             rotation="0 45 0"
@@ -102,14 +99,79 @@
     <div id="scanning-overlay">箱の中をスキャンしてください</div>
 
     <div class="buttons">
-      <button class="button" id="release-button">外に出す</button>
-      <button class="button" id="capture">
-        <i class="fas fa-camera"></i>
-      </button>
-      <button class="button" id="website-button">
-        <i class="fas fa-globe"></i>
-      </button>
+        <button class="button" id="feed-button">
+            <i class="fas fa-drumstick-bite"></i> 餌やり
+        </button>
+        <button class="button" id="release-button">外に出す</button>
+        <button class="button" id="capture">
+            <i class="fas fa-camera"></i>
+        </button>
+        <button class="button" id="show-card-button">
+            <i class="fas fa-id-card"></i>
+        </button>
+        <button class="button" id="website-button">
+            <i class="fas fa-globe"></i>
+        </button>
     </div>
+    
+    <!-- モササウルス ステータス表示 -->
+    <div id="mosa-status" class="status-panel">
+        <div class="status-item">
+            <i class="fas fa-heart"></i>
+            <span id="happiness-level">😊</span>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-drumstick-bite"></i>
+            <span id="hunger-level">🍖</span>
+        </div>
+        <div class="status-item">
+            餌やり回数: <span id="feed-count">0</span>
+        </div>
+    </div>
+
+    <!-- カードコンテナ -->
+    <div id="card-container" class="card-container hidden">
+        <div class="trading-card">
+            <div class="card-header">
+                <h2 class="dino-name">モササウルス</h2>
+            </div>
+            <div class="card-image">
+                <img src="./assets/mosasaurus-card-image.png" alt="モササウルス" class="card-image-real" />
+            </div>
+            <div class="card-body">
+                <div class="dino-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">HP</span>
+                        <span class="stat-value">950</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">攻撃力</span>
+                        <span class="stat-value">88</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">防御力</span>
+                        <span class="stat-value">80</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">速　度</span>
+                        <span class="stat-value">75</span>
+                    </div>
+                </div>
+                <div class="dino-info">
+                    <p><strong>学名:</strong> <i>Mosasaurus hoffmanni</i></p>
+                    <p><strong>時代:</strong> 白亜紀後期 (約7,000万年前～6,600万年前)</p>
+                    <p><strong>生息地:</strong> 世界中の温暖な浅い海</p>
+                    <p><strong>サイズ:</strong> 体長 約12～18m / 体重 約10～40t</p>
+                </div>
+                <div class="dino-trivia">
+                    <h3>豆知識</h3>
+                    <p>モササウルスは海に住む巨大なトカゲの仲間で、「マース川のトカゲ」という意味の名前を持っているよ。ヒレのような足で海を泳ぎ、サメやウミガメ、他の海洋爬虫類を食べていたんだ。歯は鋭くて獲物をしっかりつかめるし、尻尾はサメのように左右に動かして泳いでいたよ。</p>
+                </div>
+            </div>
+            <button id="close-card-button" class="close-button">×</button>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
     <script src="tap-move.js"></script>
     <script>

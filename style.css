@@ -41,9 +41,10 @@ a-scene {
   display: flex;
   justify-content: center; /* 中央揃え */
   align-items: center;
-  gap: 20px; /* ボタン間の間隔 */
+  gap: 15px; /* ボタン間の間隔を少し縮める */
   z-index: 1000;
   pointer-events: auto;
+  flex-wrap: wrap; /* ボタンが多い場合の折り返し */
 }
 /* 撮影ボタン */
 #capture {
@@ -184,4 +185,348 @@ a-scene {
 /* ボタンのアクティブ効果を追加 */
 .modal-btn:active {
   transform: scale(0.98);
+}
+
+/* 餌やりボタンのスタイル */
+#feed-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 165, 0, 0.9); /* オレンジ色 */
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+#feed-button:hover {
+  background-color: rgba(255, 140, 0, 0.9);
+  transform: scale(1.05);
+}
+
+/* カードボタンのスタイル */
+#show-card-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(30, 144, 255, 0.9); /* ブルー色 */
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+}
+
+#show-card-button:hover {
+  background-color: rgba(0, 123, 255, 0.9);
+  transform: scale(1.05);
+}
+
+/* モササウルス ステータスパネル */
+.status-panel {
+  position: fixed;
+  top: 70px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
+  z-index: 1000;
+  font-size: 14px;
+  min-width: 200px;
+  display: none; /* 初期状態では非表示 */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.status-panel.visible {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-item i {
+  width: 16px;
+  font-size: 14px;
+  color: #ffd700;
+}
+
+/* 餌やりエフェクトアニメーション */
+@keyframes feedingEffect {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.feeding-effect {
+  position: absolute;
+  pointer-events: none;
+  font-size: 24px;
+  animation: feedingEffect 1.5s ease-out forwards;
+  z-index: 1500;
+}
+
+/* スライドインアニメーション */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* パーティクルエフェクト */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 1500;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* トレーディングカード機能 */
+
+.card-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.card-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trading-card {
+  position: relative;
+  width: 320px;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #1E90FF, #4682B4, #87CEEB);
+  border: 3px solid #00CED1;
+  border-radius: 15px;
+  box-shadow: 
+    0 0 0 2px #1E90FF,
+    0 10px 30px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 3px rgba(255, 255, 255, 0.3);
+  color: #0F1419;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  transform: scale(0.95);
+  transition: transform 0.4s ease-in-out;
+  margin: 15px;
+}
+
+.card-container:not(.hidden) .trading-card {
+  transform: scale(1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+  background: linear-gradient(90deg, #1E90FF, #4682B4);
+  border-bottom: 2px solid #00CED1;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.dino-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  color: #F0F8FF;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.dino-hp {
+  font-size: 14px;
+  font-weight: bold;
+  color: #F0F8FF;
+  background: rgba(30, 144, 255, 0.8);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #00CED1;
+}
+
+.card-image {
+  padding: 20px;
+  text-align: center;
+}
+
+.card-image-real {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  border-radius: 8px;
+  border: 2px solid #00CED1;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.card-image-placeholder {
+  font-size: 120px;
+  background: linear-gradient(135deg, #87CEEB, #4682B4, #1E90FF);
+  border-radius: 8px;
+  border: 2px solid #00CED1;
+  padding: 35px 50px;
+  display: inline-block;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+  padding: 0 15px 15px;
+}
+
+.dino-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #1E90FF, #4682B4);
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 2px solid #00CED1;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item .stat-label {
+  font-size: 10px;
+  color: #F0F8FF;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  margin-bottom: 2px;
+}
+
+.stat-item .stat-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #00FFFF;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  margin-top: 2px;
+}
+
+.dino-info {
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  background: rgba(240, 248, 255, 0.9);
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #00CED1;
+}
+
+.dino-info p {
+  margin: 3px 0;
+  color: #0F1419;
+}
+
+.dino-info strong {
+  color: #1E90FF;
+  font-weight: bold;
+}
+
+.dino-trivia {
+  background: linear-gradient(135deg, #1E90FF, #4682B4);
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #00CED1;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+.dino-trivia h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #00FFFF;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.dino-trivia p {
+  font-size: 11px;
+  margin: 0;
+  line-height: 1.4;
+  color: #F0F8FF;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.close-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #1E90FF, #4682B4);
+  color: #F0F8FF;
+  border: 2px solid #00CED1;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+  font-weight: bold;
+  z-index: 10;
 }
