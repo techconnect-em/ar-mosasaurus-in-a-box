@@ -21,7 +21,10 @@ os.chdir('/Users/mizunomasaharu/ar-mosasaurus-in-a-box')
 with socketserver.TCPServer(("", PORT), HTTPSHandler) as httpd:
     # Add SSL layer
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('cert.pem', 'key.pem')
+    # セキュリティ向上: 環境変数から証明書パスを取得
+    cert_path = os.environ.get('SSL_CERT_PATH', 'cert.pem')
+    key_path = os.environ.get('SSL_KEY_PATH', 'key.pem')
+    context.load_cert_chain(cert_path, key_path)
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
     
     print(f"Serving HTTPS on port {PORT}")
