@@ -1,0 +1,29 @@
+# SSL証明書と秘密鍵
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# 環境変数ファイル
+.env
+.env.local
+.env.production
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# IDEファイル
+.vscode/
+.idea/
+
+# ログファイル
+*.log
